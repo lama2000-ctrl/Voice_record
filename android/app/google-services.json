@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "3311866106",
+    "project_id": "voice-record-1a18f",
+    "storage_bucket": "voice-record-1a18f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3311866106:android:8ce86685878f69016d3943",
+        "android_client_info": {
+          "package_name": "com.example.voice_record"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "3311866106-75gbudee98bm7anomrhbkb9fsvfqpm1g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpNPb6yrQDS72lj_DLOEkSHzm1rGOi-Oc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "3311866106-75gbudee98bm7anomrhbkb9fsvfqpm1g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

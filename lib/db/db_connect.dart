@@ -6,8 +6,8 @@ import 'package:path/path.dart';
 class RecordProvider {
   late Database db;
   String table = "records";
-  RecordedAudio recordedAudio;
-  RecordProvider({required this.recordedAudio});
+  RecordedAudio? recordedAudio;
+  RecordProvider({this.recordedAudio});
 
   Future _open() async {
     var databasesPath = await getDatabasesPath();
@@ -51,6 +51,31 @@ create table $table (
       print(element);
     });
     return list;
+  }
+
+  Future<List> getRec() async {
+    var databasesPath = await getDatabasesPath();
+    List recs_id = [];
+    List recs_sent = [];
+    String path = join(databasesPath, 'demo.db');
+    db = await openDatabase(path, version: 1);
+    List<Map<String, dynamic>> list =
+        await db.rawQuery('SELECT * FROM records');
+    int count = 0;
+    list.forEach((element) {
+      if (count < 100) {
+        recs_id.add(element["ID"]);
+        if (element["SENTIMENT"] == "POSITIVE") {
+          recs_sent.add(1);
+        } else if (element["SENTIMENT"] == "NEGATIVE") {
+          recs_sent.add(-1);
+        } else {
+          recs_sent.add(0);
+        }
+        count += 1;
+      }
+    });
+    return recs_sent;
   }
 
   Future<RecordedAudio?> getRecords(int id) async {

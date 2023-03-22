@@ -1,13 +1,14 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_record/audio_player.dart';
 
 class RecordListView extends StatefulWidget {
-  final List<String> records;
-  const RecordListView({
-    Key? key,
-    required this.records,
-  }) : super(key: key);
+  final List<Reference> references;
+  final List<String> recordList;
+  const RecordListView(
+      {Key? key, required this.references, required this.recordList})
+      : super(key: key);
 
   @override
   _RecordListViewState createState() => _RecordListViewState();
@@ -16,13 +17,24 @@ class RecordListView extends StatefulWidget {
 class _RecordListViewState extends State<RecordListView> {
   late int _totalDuration;
   late int _currentDuration;
-  double _completedPercentage = 0.0;
+  double? _completedPercentage;
   bool _isPlaying = false;
-  int _selectedIndex = -1;
+  int? _selectedIndex;
+  late AudioPlayerr audioPlayerr;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+    _isPlaying = false;
+    _selectedIndex = -1;
+    _completedPercentage = 0.0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return widget.records.isEmpty
+    return widget.references.isEmpty
         ? Center(child: Text('No records yet'))
         : SingleChildScrollView(
             physics: const BouncingScrollPhysics(
@@ -31,14 +43,15 @@ class _RecordListViewState extends State<RecordListView> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ListView.builder(
-                  itemCount: widget.records.length,
+                  itemCount: widget.references.length,
                   shrinkWrap: true,
                   reverse: true,
                   itemBuilder: (BuildContext context, int i) {
                     return ExpansionTile(
-                      title: Text('New recoding ${widget.records.length - i}'),
+                      title:
+                          Text('New recoding ${widget.references.length - i}'),
                       subtitle: Text(_getDateFromFilePatah(
-                          filePath: widget.records.elementAt(i))),
+                          filePath: widget.references.elementAt(i).name)),
                       onExpansionChanged: ((newState) {
                         if (newState) {
                           setState(() {
@@ -67,7 +80,7 @@ class _RecordListViewState extends State<RecordListView> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
                                 child: AudioPlayerr(
-                                  source: widget.records.elementAt(i),
+                                  source: widget.recordList[i],
                                   onDelete: () {
                                     setState(() {});
                                   },
@@ -129,8 +142,8 @@ class _RecordListViewState extends State<RecordListView> {
 
   String _getDateFromFilePatah({required String filePath}) {
     String fromEpoch = filePath.substring(
-        filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
-
+        filePath.lastIndexOf('%') + 1, filePath.lastIndexOf('.'));
+    print("............$fromEpoch");
     DateTime recordedDate =
         DateTime.fromMillisecondsSinceEpoch(int.parse(fromEpoch));
     int year = recordedDate.year;

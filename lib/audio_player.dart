@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 
 class AudioPlayerr extends StatefulWidget {
   /// Path from where to play recorded audio
@@ -27,9 +25,7 @@ class AudioPlayerr extends StatefulWidget {
 class AudioPlayerState extends State<AudioPlayerr> {
   static const double _controlSize = 56;
   static const double _deleteBtnSize = 24;
-  SpeechToText _speechToText = SpeechToText();
-  bool _speechEnabled = false;
-  String _lastWords = '';
+
   String text = '';
   final _audioPlayer = ap.AudioPlayer();
   late StreamSubscription<void> _playerStateChangedSubscription;
@@ -113,8 +109,6 @@ class AudioPlayerState extends State<AudioPlayerr> {
             if (_audioPlayer.state == ap.PlayerState.playing) {
               pause();
             } else {
-              print("listenning................");
-              _speechToText.isNotListening ? _startListening : _stopListening;
               play();
             }
           },
@@ -123,34 +117,15 @@ class AudioPlayerState extends State<AudioPlayerr> {
     );
   }
 
-  void _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize();
-    setState(() {});
-  }
-
   /// Each time to start a speech recognition session
-  void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult);
-    setState(() {});
-  }
 
   /// Manually stop the active speech recognition session
   /// Note that there are also timeouts that each platform enforces
   /// and the SpeechToText plugin supports setting timeouts on the
   /// listen method.
-  void _stopListening() async {
-    await _speechToText.stop();
-    setState(() {});
-  }
 
   /// This is the callback that the SpeechToText plugin calls when
   /// the platform returns recognized words.
-  void _onSpeechResult(SpeechRecognitionResult result) {
-    setState(() {
-      _lastWords = result.recognizedWords;
-      text += '$_lastWords ';
-    });
-  }
 
   Widget _buildSlider(double widgetWidth) {
     bool canSetValue = false;
