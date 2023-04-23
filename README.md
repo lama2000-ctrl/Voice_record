@@ -1,6 +1,6 @@
 # voice_record
 
-A new Flutter project.
+A new Flutter project:  Design of a voice record app that acts as a diary and shows in Real time Variation of Sentiments during the Day and The Month.
 
 ## Getting Started
 
